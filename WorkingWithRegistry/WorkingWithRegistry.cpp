@@ -1,20 +1,20 @@
 #include <iostream>
 
-#include "Registry.cpp"
+#include "Registry.h"
 using namespace std;
 
 int main()
 {
 	cout << "Enter the command:\n";
-	cout << "ROOT[root]\n";
-	cout << "OPEN[subkey]\n";
-	cout << "RETURN\n";
-	cout << "CREATE[name]\n";
-	cout << "ADD [param_name][param_type][data]\n";
-	cout << "SEARCH[subkey]\n";
-	cout << "READ_FLAGS[path]\n";
-	cout << "GET_INFO\n";
+	cout << "ROOT\n";
+	cout << "OPEN\n";
+	cout << "CREATE\n";
+	cout << "ADD\n";
+	cout << "SEARCH\n";
+	cout << "READ_FLAGS\n";
+	cout << "PRINT_KEYS\n";
 	cout << "EXIT\n";
+	cout << "\n";
 
 	string command;
 	cin >> command;
@@ -23,12 +23,11 @@ int main()
 	auto registry = new Registry();
 	while (TRUE)
 	{
-		if (strcmp(command.c_str(), "ROOT"))
+		if (!strcmp(command.c_str(), "ROOT"))
 		{
 			string root;
 			cout << "Enter root: ";
 			cin >> root;
-			cout << "\n";
 			BOOL res = registry->Root(root);
 			if (!res)
 			{
@@ -36,16 +35,16 @@ int main()
 			}
 			else
 			{
-				cout << "SUCCESS";
+				registry->PrintKeys();
 			}
 		}
-		else if (strcmp(command.c_str(), "OPEN"))
+		else if (!strcmp(command.c_str(), "OPEN"))
 		{
 			string subKey;
 			cout << "Enter subkey: ";
 			cin >> subKey;
 			cout << "\n";
-			auto res = registry->Open();
+			auto res = registry->Open(subKey);
 			if (res != ERROR_SUCCESS)
 			{
 				if (res == ERROR_FILE_NOT_FOUND) {
@@ -58,10 +57,10 @@ int main()
 			}
 			else
 			{
-				cout << "SUCCESS";
+				registry->PrintKeys();
 			}
 		}
-		else if (strcmp(command.c_str(), "CREATE"))
+		else if (!strcmp(command.c_str(), "CREATE"))
 		{
 			string name;
 			cout << "Enter name: ";
@@ -81,10 +80,10 @@ int main()
 			}
 			else
 			{
-				cout << "SUCCESS";
+				registry->PrintKeys();
 			}
 		}
-		else if (strcmp(command.c_str(), "ADD"))
+		else if (!strcmp(command.c_str(), "ADD"))
 		{
 			string name;
 			cout << "Enter parameters name: ";
@@ -107,10 +106,10 @@ int main()
 			}
 			else
 			{
-				cout << "SUCCESS";
+				registry->PrintKeys();
 			}
 		}
-		else if (strcmp(command.c_str(), "SEARCH"))
+		else if (!strcmp(command.c_str(), "SEARCH"))
 		{
 			string name;
 			cout << "Enter name: ";
@@ -123,24 +122,43 @@ int main()
 			}
 			else
 			{
-				cout << "SUCCESS";
+				registry->PrintKeys();
 			}
 		}
-		else if (strcmp(command.c_str(), "READ_FLAGS"))
+		else if (!strcmp(command.c_str(), "READ_FLAGS"))
 		{
+			string customPath;
+			cout << "Enter path after HKEY_LOCAL_MACHINE\\: ";
+			cin >> customPath;
+			cout << "\n";
 
+			std::string path = "reg flags HKEY_LOCAL_MACHINE\\" + customPath;
+			system(path.c_str());
 		}
-		else if (strcmp(command.c_str(), "GET_INFO"))
+		else if (!strcmp(command.c_str(), "PRINT_KEYS"))
 		{
-
+			registry->PrintKeys();
 		}
-		else if (strcmp(command.c_str(), "EXIT"))
+		else if (!strcmp(command.c_str(), "EXIT"))
 		{
-			return;
+			cout << "\nExit from application\n";
+			break;
 		}
 
-		cout << "\n";
+		cout << endl;
+		cout << endl;
+		cout << "Enter the command:\n";
+		cout << "ROOT\n";
+		cout << "OPEN\n";
+		cout << "CREATE\n";
+		cout << "ADD\n";
+		cout << "SEARCH\n";
+		cout << "PRINT_KEYS\n";
+		cout << "READ_FLAGS\n";
+		cout << "EXIT" << endl;
+		cout << endl;
 		std::cin >> command;
-		std::cout << "\n";
+		std::cout << "\n" << endl;
+
 	}
 }
